@@ -1,0 +1,30 @@
+replicaCount: 1
+
+image:
+  repository: nginx
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: NodePort
+  port: 80
+  nodePort: 30001
+  httpsPort: 443
+  httpsNodePort: 30002
+
+ingress:
+  enabled: true
+  name: ""
+  className: ""
+  annotations: {}
+  hosts:
+    - host: nginx.example.com
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls:
+    - secretName: nginx-tls
+      hosts:
+        - nginx.example.com
+
+resources: {}
