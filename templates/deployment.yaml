@@ -1,32 +1,30 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nginx-chart.fullname" . }}
+  name: {{ include "nginx-helm-chart.fullname" . }}
   labels:
-    {{- include "nginx-chart.labels" . | nindent 4 }}
+    app: {{ include "nginx-helm-chart.name" . }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "nginx-chart.name" . }}
+      app: {{ include "nginx-helm-chart.name" . }}
   template:
     metadata:
       labels:
-        app: {{ include "nginx-chart.name" . }}
+        app: {{ include "nginx-helm-chart.name" . }}
     spec:
       containers:
         - name: nginx
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
-            - name: http
-              containerPort: 80
-            - name: https
-              containerPort: 443
+            - containerPort: 80
+            - containerPort: 443
           volumeMounts:
-            - name: ssl-certs
+            - name: tls-secret
               mountPath: /etc/nginx/ssl
               readOnly: true
       volumes:
-        - name: ssl-certs
+        - name: tls-secret
           secret:
-            secretName: nginx-tls
+            secretName: {{ include "nginx-helm-chart.fullname" . }}-tls
