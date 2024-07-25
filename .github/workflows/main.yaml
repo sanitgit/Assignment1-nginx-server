@@ -9,7 +9,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-  env:
+    env:
       GCP_PROJECT_ID: liquid-folio-430502-k7
       GKE_CLUSTER: cluster-test # Add your cluster name here.
       
