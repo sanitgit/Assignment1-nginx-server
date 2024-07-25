@@ -1,9 +1,10 @@
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "nginx-chart.fullname" . }}
+  name: {{ include "nginx-server.fullname" . }}
   labels:
-    {{- include "nginx-chart.labels" . | nindent 4 }}
+    {{- include "nginx-server.labels" . | nindent 4 }}
   annotations:
     {{- toYaml .Values.ingress.annotations | nindent 4 }}
 spec:
@@ -16,10 +17,11 @@ spec:
             pathType: {{ .Values.ingress.hosts[0].paths[0].pathType }}
             backend:
               service:
-                name: {{ include "nginx-chart.fullname" . }}
+                name: {{ include "nginx-server.fullname" . }}
                 port:
                   number: {{ .Values.service.port }}
   tls:
     - hosts:
         - {{ .Values.ingress.tls[0].hosts[0] }}
       secretName: {{ .Values.ingress.tls[0].secretName }}
+{{- end }}
