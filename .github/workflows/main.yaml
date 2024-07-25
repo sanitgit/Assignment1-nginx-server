@@ -48,7 +48,7 @@ jobs:
     - name: GCR Publish
       run: |-
           docker push gcr.io/$GCP_PROJECT_ID/$DOCKER_IMAGE:latest
-          docker push gcr.io/$GCP_PROJECT_ID/$DOCKER_IMAGE:${{ github.sha }}
+          
 
     - name: GCloud Plugins Setup
       run: |
