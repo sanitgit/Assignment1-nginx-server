@@ -30,7 +30,7 @@ jobs:
       #run: gcloud components list
 
     - name: GCloud Plugins Setup
-        run: |-
+      run: |-
           gcloud components update
           gcloud components install gke-gcloud-auth-plugin 
 
