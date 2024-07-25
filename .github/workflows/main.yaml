@@ -44,8 +44,5 @@ jobs:
     - name: Set up Helm
       uses: azure/setup-helm@v1
 
-    - name: Update Helm repositories
-      run: helm repo update
-
     - name: Deploy NGINX server with Helm
       run: helm upgrade --install my-nginx-server ./nginx-server
