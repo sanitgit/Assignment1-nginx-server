@@ -2,7 +2,7 @@ name: Deploy NGINX Servers
 
 on:
   push:
-    branches:             #The workflow triggers on pushes to the main branch.
+    branches:
       - main
 
 jobs:
@@ -15,43 +15,37 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
-    - name: Set up Google Cloud SDK                    #Sets up the Google Cloud SDK 
-      uses: google-github-actions/setup-gcloud@v1        
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
       with:
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
         project_id: ${{ env.GCP_PROJECT_ID }}
-        export_default_credentials: true               
 
-    #Authenticates the service account using the JSON key from the secret GCP_SA_KEY.
     - name: Authenticate with Service Account
-      run: |                                              
-        echo "${{ secrets.GCP_SA_KEY }}" | gcloud auth activate-service-account --key-file=-  
-        gcloud config set project ${{ env.GCP_PROJECT_ID }}
-        gcloud auth list
+      uses: google-github-actions/auth@v1
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    #plugins for interacting with GKE are installed and up-to-date.
     - name: GCloud Plugins Setup
-      run: |                                              
+      run: |
         gcloud components update
         gcloud components install gke-gcloud-auth-plugin
 
-    #necessary credentials to interact with the specified GKE cluster.
     - name: Get GKE credentials
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone asia-southeast1-a --project ${{ env.GCP_PROJECT_ID }}
 
-    #Sets up kubectl, the Kubernetes command-line tool, which is required to manage the Kubernetes cluster.
     - name: Set up Kubernetes
-      uses: Azure/setup-kubectl@v1
+      uses: azure/setup-kubectl@v3
       with:
         version: 'v1.21.0'
 
-    #Installs Helm, a package manager for Kubernetes, which is used for deploying applications and managing Kubernetes charts.
     - name: Set up Helm
       uses: azure/setup-helm@v1
 
-    #Deploys or upgrades an NGINX server using Helm. The command installs a release named my-nginx-server from the Helm chart located at ./nginx-server.
+    - name: Update Helm repositories
+      run: helm repo update
+
     - name: Deploy NGINX server with Helm
       run: helm upgrade --install my-nginx-server ./nginx-server
