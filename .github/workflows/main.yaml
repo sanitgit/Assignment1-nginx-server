@@ -1,4 +1,4 @@
-name: Deploy NGINX Servers
+name: Deploy NGINX Server
 
 on:
   push:
