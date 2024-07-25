@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "my-nginx-serve.fullname" . }}
+  name: {{ include "my-nginx-server.fullname" . }}
   labels:
-    {{- include "my-nginx-serve.labels" . | nindent 4 }}
+    {{- include "my-nginx-server.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "my-nginx-serve.selectorLabels" . | nindent 6 }}
+      {{- include "my-nginx-server.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "my-nginx-serve.selectorLabels" . | nindent 8 }}
+        {{- include "my-nginx-server.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}

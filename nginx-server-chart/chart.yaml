@@ -3,4 +3,4 @@ name: my-nginx-server
 description: A Helm chart for deploying an NGINX server
 type: application
 version: 0.1.0
-appVersion: "1.21.6"
+appVersion: "1.16.0"

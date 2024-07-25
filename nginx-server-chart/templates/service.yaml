@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "my-nginx-serve.fullname" . }}
+  name: {{ include "my-nginx-server.fullname" . }}
   labels:
-    {{- include "my-nginx-serve.labels" . | nindent 4 }}
+    {{- include "my-nginx-server.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -11,4 +11,4 @@ spec:
       targetPort: 80
       nodePort: {{ .Values.service.nodePort | default nil }}
   selector:
-    {{- include "my-nginx-serve.selectorLabels" . | nindent 4 }}
+    {{- include "my-nginx-server.selectorLabels" . | nindent 4 }}
