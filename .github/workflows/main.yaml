@@ -9,6 +9,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+  env:
+      GCP_PROJECT_ID: liquid-folio-430502-k7
+      GKE_CLUSTER: cluster-test # Add your cluster name here.
+      
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
