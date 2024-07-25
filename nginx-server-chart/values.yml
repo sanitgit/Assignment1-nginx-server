@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: "1.21.6"
-  pullPolicy: IfNotPresent
+  repository: gcr.io/liquid-folio-430502-k7/my-nginx-image
+  tag: "latest"
+  pullPolicy: Always
 
 service:
   type: NodePort
