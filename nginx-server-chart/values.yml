@@ -1,15 +1,16 @@
-replicaCount: 1
+replicaCount: 1     #number of replicas for the NGINX deployment
 
 image:
-  repository: gcr.io/liquid-folio-430502-k7/my-nginx-image
+  repository: gcr.io/liquid-folio-430502-k7/my-nginx-image  #location of the Docker image in the Google Container Registry
   tag: "latest"
-  pullPolicy: Always
+  pullPolicy: Always      #the image will be pulled from the repository every time a pod is started. 
 
 service:
   type: NodePort
-  port: 80
-  nodePort: 30001
+  port: 80          #port on which the service is exposed inside the cluster
+  nodePort: 30001   #the port on each node’s IP that the service is exposed on.
 
+#Ingress resource for managing external access to the NGINX service
 ingress:
   enabled: true
   className: "nginx"
@@ -20,9 +21,9 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - hosts:
+    - hosts:                #domain name for which TLS is enabled
         - example.com
-      secretName: nginx-tls
+      secretName: nginx-tls   #name of the Kubernetes Secret that contains the TLS certificate and key.
 
 resources: {}
 nodeSelector: {}

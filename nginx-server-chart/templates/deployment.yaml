@@ -1,11 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nginx-server-chart.fullname" . }}
+  name: {{ include "nginx-server-chart.fullname" . }}  #dynamically include the full name of the Deployment based on the chart’s naming conventions
   labels:
     {{- include "nginx-server-chart.labels" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount }}    #set instances of the NGINX server want to run
   selector:
     matchLabels:
       {{- include "nginx-server-chart.selectorLabels" . | nindent 6 }}
@@ -19,7 +19,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
+            - containerPort: 80    #Exposes port 80 for HTTP traffic.
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       nodeSelector:

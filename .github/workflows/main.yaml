@@ -3,44 +3,43 @@ name: Deploy NGINX Servers
 on:
   push:
     branches:
-      - main
+      - main        #workflow triggers on a push to the main branch.
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-
-    env:
+    runs-on: ubuntu-latest     #the job that runs on the latest Ubuntu runner 
+    env:                       #sets environment variables for the GCP project, GKE cluster, Docker image details, and Helm chart path.
       GCP_PROJECT_ID: liquid-folio-430502-k7
       GKE_CLUSTER: cluster-test
       IMAGE_NAME: my-nginx-image
       IMAGE_TAG: latest
-      REGISTRY: gcr.io  # Use Google Container Registry (GCR) or your preferred registry
-      DEPLOYMENT_NAME: nginx-server-chart #my-nginx-server
+      REGISTRY: gcr.io   
+      DEPLOYMENT_NAME: nginx-server-chart 
       CHART_PATH: ./nginx-server-chart
       DOCKER_IMAGE: my-nginx-image
 
     steps:
-    - name: Checkout code
+    - name: Checkout code          #Checks out the repository's code.
       uses: actions/checkout@v3
 
-    - name: List files
+    - name: List files             #Lists files in the docker directory for verification
       run: ls -la docker
 
-    - name: Set up Google Cloud SDK
+    - name: Set up Google Cloud SDK    #Sets up the Google Cloud SDK for subsequent gcloud commands.
       uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: ${{ env.GCP_PROJECT_ID }}
 
-    - name: Authenticate with Service Account
+    - name: Authenticate with Service Account     #Authenticates with GCP using a service account key stored in GitHub Secrets.
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Build Docker image
+    - name: Build Docker image     #Builds the Docker image using the specified Dockerfile.
       run: |
         docker build -f docker/dockerfile -t ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
-    - name: Configure Docker
+    - name: Configure Docker       #Configures Docker to authenticate with GCP
       run: |
           gcloud auth configure-docker
 
@@ -50,21 +49,21 @@ jobs:
           docker push gcr.io/$GCP_PROJECT_ID/$DOCKER_IMAGE:latest
           
 
-    - name: GCloud Plugins Setup
+    - name: GCloud Plugins Setup   #Installs necessary gcloud plugins, including the GKE authentication plugin.
       run: |
         gcloud components update
         gcloud components install gke-gcloud-auth-plugin
 
-    - name: Get GKE credentials
+    - name: Get GKE credentials   #Retrieves credentials for accessing the GKE cluster.
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone asia-southeast1-a --project ${{ env.GCP_PROJECT_ID }}
 
-    - name: Set up Kubernetes
+    - name: Set up Kubernetes     #Sets up kubectl, the Kubernetes command-line tool.
       uses: azure/setup-kubectl@v3
       with:
         version: 'v1.21.0'
 
-    - name: Set up Helm
+    - name: Set up Helm                #Sets up Helm
       uses: azure/setup-helm@v1
 
     - name: Deploy NGINX server with Helm
