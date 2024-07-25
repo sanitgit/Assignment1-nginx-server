@@ -16,7 +16,7 @@ jobs:
       IMAGE_TAG: latest
       REGISTRY: gcr.io  # Use Google Container Registry (GCR) or your preferred registry
       DEPLOYMENT_NAME: my-nginx-server
-      CHART_PATH: ./nginx-server-chart
+      CHART_PATH: nginx-server-chart
       DOCKER_IMAGE: my-nginx-image
 
     steps:
