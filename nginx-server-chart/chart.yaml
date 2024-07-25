@@ -1,4 +1,4 @@
-apiVersion: v2
+apiVersion: v1
 name: nginx-server-chart
 description: A Helm chart for deploying an NGINX server
 type: application
