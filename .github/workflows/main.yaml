@@ -39,9 +39,15 @@ jobs:
       run: |
         docker build -f docker/dockerfile -t ${{ env.REGISTRY }}/${{ env.GCP_PROJECT_ID }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }} .
 
-    - name: Push Docker image
+    - name: Configure Docker
       run: |
-        docker push gcr.io/liquid-folio-430502-k7/my-nginx-image:latest
+          gcloud auth configure-docker
+
+    # Push the Docker image to Google Container Registry
+    - name: GCR Publish
+      run: |-
+          docker push gcr.io/$PROJECT_ID/$DOCKER_IMAGE:${{ github.sha }}
+          docker push gcr.io/$PROJECT_ID/$DOCKER_IMAGE:latest
 
     - name: GCloud Plugins Setup
       run: |
