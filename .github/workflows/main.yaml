@@ -17,6 +17,7 @@ jobs:
       REGISTRY: gcr.io  # Use Google Container Registry (GCR) or your preferred registry
       DEPLOYMENT_NAME: my-nginx-server
       CHART_PATH: ./nginx-server
+      DOCKER_IMAGE: my-nginx-image
 
     steps:
     - name: Checkout code
@@ -46,8 +47,8 @@ jobs:
     # Push the Docker image to Google Container Registry
     - name: GCR Publish
       run: |-
-          docker push gcr.io/$PROJECT_ID/$DOCKER_IMAGE:${{ github.sha }}
-          docker push gcr.io/$PROJECT_ID/$DOCKER_IMAGE:latest
+          docker push gcr.io/$GCP_PROJECT_ID/$DOCKER_IMAGE:latest
+          docker push gcr.io/$GCP_PROJECT_ID/$DOCKER_IMAGE:${{ github.sha }}
 
     - name: GCloud Plugins Setup
       run: |
